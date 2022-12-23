@@ -1,0 +1,13 @@
+
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5454/nalovu
+    username: root
+    password: Password1*
+    driverClassName: org.postgresql.Driver
