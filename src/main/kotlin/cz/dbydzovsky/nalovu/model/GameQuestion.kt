@@ -1,5 +1,6 @@
 package cz.dbydzovsky.nalovu.model
 
+import cz.dbydzovsky.nalovu.model.def.GroupDefinition
 import cz.dbydzovsky.nalovu.model.def.QuestionDefinition
 import javax.persistence.*
 
@@ -15,8 +16,8 @@ class GameQuestion (
     val question: QuestionDefinition,
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
-    val user: User,
+    @JoinColumn(name="user_id", nullable=true)
+    val user: User?,
 
     @ManyToOne
     @JoinColumn(name="game_id", nullable=false)

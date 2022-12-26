@@ -22,19 +22,22 @@ class Game (
     @Column
     val name: String,
 
-    @OneToMany(mappedBy="game")
-    val assignments: List<GameAssignment> = mutableListOf(),
+    @OneToMany(mappedBy="game", targetEntity = GameAssignment::class)
+    var assignments: MutableList<GameAssignment> = mutableListOf(),
 
-    @OneToMany(mappedBy="game")
-    val questions: List<GameQuestion> = mutableListOf()
+    @OneToMany(mappedBy="game", targetEntity = GameQuestion::class)
+    var questions: List<GameQuestion> = mutableListOf()
 
 ) {
     val adminAssignment: GameAssignment
         get() = assignments.single { it.role == UserRole.Admin }
 
-    val hunterAssignment: GameAssignment
-        get() = assignments.single { it.role == UserRole.Hunter }
+    val hunterAssignment: GameAssignment?
+        get() = assignments.firstOrNull { it.role == UserRole.Hunter }
 
     val playerAssignments: List<GameAssignment>
         get() = assignments.filter { it.role == UserRole.Player }
+
+    val hasHunter: Boolean
+        get() = assignments.any { it.role == UserRole.Hunter }
 }

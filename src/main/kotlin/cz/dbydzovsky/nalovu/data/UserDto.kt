@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull
 
 data class UserDto (
     @NotNull
-    val username: String,
+    val username: String = "",
 
     @NotNull
-    val password: String
+    val password: String = ""
 )
