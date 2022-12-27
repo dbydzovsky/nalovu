@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 export interface OpenPageProps {
     url: string
 }
+export function useMyTransition() {
+    return useTransition()
+}
 
 export function useTransition() {
     const navigate = useNavigate()
