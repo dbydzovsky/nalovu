@@ -25,62 +25,6 @@ class SecurityConfig(
     private val authProvider: CustomAuthenticationProvider,
     private val userDetailsService: MyUserDetailsService
 ){
-//    @Bean
-//    fun corsConfigurer(): WebMvcConfigurer {
-//        return object : WebMvcConfigurerAdapter() {
-//            override fun addCorsMappings(registry: CorsRegistry) {
-//                registry.addMapping("/**").allowedOrigins("*")
-//            }
-//        }
-//    }
-//    @Bean
-//    fun corsConfigurationSource(): CorsConfigurationSource {
-//        val configuration = CorsConfiguration()
-//        configuration.allowedOrigins = listOf("*")
-//        configuration.allowedMethods = listOf(
-//            "HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"
-//        )
-//        // setAllowCredentials(true) is important, otherwise:
-//        // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
-//        configuration.allowCredentials = true
-//        // setAllowedHeaders is important! Without it, OPTIONS preflight request
-//        // will fail with 403 Invalid CORS request
-//        configuration.allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
-//        val source = UrlBasedCorsConfigurationSource()
-//        source.registerCorsConfiguration("/**", configuration)
-//        return source
-//    }
-//    @Bean
-//    fun corsMappingConfigurer(): WebMvcConfigurer? {
-//        return object : WebMvcConfigurer {
-//            override fun addCorsMappings(registry: CorsRegistry) {
-//                registry.addMapping("/**")
-//                    .allowedOrigins("http://localhost:3000","http://localhost:8080")
-//                    .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")
-//                    .maxAge(3600)
-//                    .allowedHeaders("Requestor-Type")
-//                    .exposedHeaders("X-Get-Header")
-//            }
-//        }
-//    }
-
-//    @Bean
-//    fun corsWebFilter(): CorsWebFilter {
-//        val corsConfig = CorsConfiguration()
-//        corsConfig.allowedOrigins = Arrays.asList("*")
-//        corsConfig.maxAge = 3600L
-//        corsConfig.addAllowedMethod("*")
-//        corsConfig.addAllowedHeader("Requestor-Type")
-//        corsConfig.addExposedHeader("X-Get-Header")
-//        val source = UrlBasedCorsConfigurationSource()
-//        source.registerCorsConfiguration("/**", corsConfig)
-//        return CorsWebFilter(source)
-//    }
-
-//    override fun addCorsMappings(registry: CorsRegistry) {
-//        registry.addMapping("/**")
-//            .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
-//    }
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()

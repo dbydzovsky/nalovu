@@ -1,15 +1,10 @@
 package cz.dbydzovsky.nalovu.services
 
 import cz.dbydzovsky.nalovu.data.UserRole
-import cz.dbydzovsky.nalovu.model.Game
-import cz.dbydzovsky.nalovu.model.GameAssignment
-import cz.dbydzovsky.nalovu.model.GameQuestion
-import cz.dbydzovsky.nalovu.model.User
+import cz.dbydzovsky.nalovu.model.*
 import cz.dbydzovsky.nalovu.model.def.GameDefinition
-import cz.dbydzovsky.nalovu.repositories.GameAssignmentRepository
-import cz.dbydzovsky.nalovu.repositories.GameDefinitionRepository
-import cz.dbydzovsky.nalovu.repositories.GameQuestionRepository
-import cz.dbydzovsky.nalovu.repositories.GameRepository
+import cz.dbydzovsky.nalovu.model.def.QuestionDefinition
+import cz.dbydzovsky.nalovu.repositories.*
 import cz.dbydzovsky.nalovu.rest.dto.CreateGameDto
 import cz.dbydzovsky.nalovu.rest.dto.JoinGameDto
 import org.springframework.stereotype.Service
@@ -20,7 +15,8 @@ class GameService(
     val gameRepository: GameRepository,
     val gameDefinitionRepository: GameDefinitionRepository,
     val gameQuestionRepository: GameQuestionRepository,
-    val gameAssignmentRepository: GameAssignmentRepository
+    val gameAssignmentRepository: GameAssignmentRepository,
+    val questionDefinitionRepository: QuestionDefinitionRepository
 ) {
 
     companion object{
@@ -40,6 +36,18 @@ class GameService(
 
     fun getDefinition(id: Long) :GameDefinition {
         return gameDefinitionRepository.findById(id).get()
+    }
+
+    @Transactional
+    fun createGameDefinition(name: String,
+                             questions: List<QuestionDefinition>)
+    : GameDefinition {
+        val questions = questionDefinitionRepository.saveAll(questions)
+        return gameDefinitionRepository.save(GameDefinition(
+            id=null,
+            name=name,
+            questions = questions
+        ))
     }
 
     @Transactional
@@ -70,14 +78,17 @@ class GameService(
         when(dto.role) {
             UserRole.Hunter -> if (game.hasHunter)
                 throw IllegalStateException("Hunter is already assigned")
-            UserRole.Player -> if (game.playerAssignments.size > MAX_PLAYERS)
+            UserRole.Player -> if (game.getPlayerAssignments().size > MAX_PLAYERS)
                 throw IllegalStateException("Too much players")
             UserRole.Admin -> throw IllegalStateException("Admin already assigned")
+        }
+        if (game.assignments.any { it.user.id == user.id } ) {
+            throw IllegalStateException("User already assigned")
         }
         val assignment = gameAssignmentRepository.save(GameAssignment(
             game= game,
             user = user,
-            role = UserRole.Admin
+            role = dto.role
         ))
         game.assignments.add(assignment)
         return gameRepository.save(game)

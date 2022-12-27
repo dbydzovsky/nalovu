@@ -24,9 +24,7 @@ class UserService(
     }
 
     @Transactional
-    fun getGrantedAuthorities(user: User, gameId: Int): List<GrantedAuthority> {
-        val gameAssignment = user.assignments.find { it.id == gameId }
-            ?: return emptyList()
-        return listOf(SimpleGrantedAuthority(gameAssignment.role.name))
+    fun getGrantedAuthorities(user: User): List<GrantedAuthority> {
+        return listOf(SimpleGrantedAuthority("USER"))
     }
 }

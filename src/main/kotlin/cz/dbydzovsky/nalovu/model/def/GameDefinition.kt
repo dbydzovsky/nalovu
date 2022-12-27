@@ -1,5 +1,6 @@
 package cz.dbydzovsky.nalovu.model.def
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity(name = "game_definition")
@@ -7,8 +8,12 @@ class GameDefinition (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?=null,
+    val id: Long?,
 
-    @OneToMany(mappedBy="gameDefinition")
-    val questions: List<QuestionDefinition>
+    @Column
+    val name: String,
+
+    @JsonIgnore
+    @OneToMany(mappedBy="gameDefinition", targetEntity = QuestionDefinition::class)
+    var questions: List<QuestionDefinition>
 )

@@ -27,8 +27,7 @@ class MyUserDetailsService (
         val accountNonExpired = true
         val credentialsNonExpired = true
         val accountNonLocked = true
-        val gameId = 0
-        val authorities = userService.getGrantedAuthorities(user, gameId)
+        val authorities = userService.getGrantedAuthorities(user)
         return User(
             user.name, user.pass, enabled, accountNonExpired,
             credentialsNonExpired, accountNonLocked, authorities)

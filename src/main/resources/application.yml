@@ -1,4 +1,3 @@
-
 spring:
   jpa:
     database: POSTGRESQL
@@ -11,3 +10,7 @@ spring:
     username: root
     password: Password1*
     driverClassName: org.postgresql.Driver
+#
+#  mvc:
+#    static-path-pattern: /static/**
+#    throw-exception-if-no-handler-found: true

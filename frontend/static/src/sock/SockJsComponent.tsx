@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 // @ts-ignore
 import SockJsClient from 'react-stomp';
-import { getBaseUrl } from '../utils/Web';
 
-const SOCKET_URL = getBaseUrl() + '/ws-message';
+const SOCKET_URL = '/ws-message';
 
 export const SockJsComponent = () => {
   const [message, setMessage] = useState('You server message here.');
@@ -13,6 +12,7 @@ export const SockJsComponent = () => {
   }
 
   let onMessageReceived = (msg: object) => {
+    alert(JSON.stringify(msg))
     setMessage(JSON.stringify(msg));
   }
 
@@ -20,12 +20,13 @@ export const SockJsComponent = () => {
     <div>
       <SockJsClient
         url={SOCKET_URL}
-        topics={['/topic/message']}
+        topics={['/topic/message/1']}
         onConnect={onConnected}
         onDisconnect={console.log("Disconnected!")}
         onMessage={(msg:object) => onMessageReceived(msg)}
         debug={false}
       />
+      {message}
     </div>
   );
 }

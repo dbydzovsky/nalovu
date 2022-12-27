@@ -21,6 +21,7 @@ import { NewGame } from './apps/NewGame';
 import { Wrapper } from './components/Wrapper';
 import { Logout } from './apps/Logout';
 import { UserLoader } from './components/UserLoader';
+import { Lobby } from './apps/Lobby';
 
 axios.defaults.withCredentials = true
 
@@ -34,7 +35,8 @@ export const Paths = {
   login: "/login",
   logout: "/logout",
   joinGame: "/join",
-  newGame: "/newGame"
+  newGame: "/newGame",
+  lobby: "/lobby",
 }
 
 // https://mui.com/material-ui/react-button/
@@ -48,6 +50,9 @@ const router = createBrowserRouter([
   },{
     path: Paths.joinGame,
     element: <Wrapper Decorated={JoinGame} />,
+  },{
+    path: Paths.lobby,
+    element: <Wrapper Decorated={Lobby} />,
   },{
     path: Paths.newGame,
     element: <Wrapper Decorated={NewGame} />,
@@ -64,7 +69,6 @@ const theme = createTheme();
 root.render(
   <React.StrictMode>
       <Provider store={store}>
-        <SockJsComponent/>
         <UserLoader/>
         <ThemeProvider theme={theme}>
           <RouterProvider router={router} />

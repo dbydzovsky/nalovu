@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne
 class AnswerDefinition (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?=null,
+    val id: Long?=null,
 
     @Column
     val text: String = "",

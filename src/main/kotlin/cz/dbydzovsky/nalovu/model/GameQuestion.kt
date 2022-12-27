@@ -9,7 +9,7 @@ class GameQuestion (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?=null,
+    val id: Long?=null,
 
     @ManyToOne
     @JoinColumn(name="question_id", nullable=false)

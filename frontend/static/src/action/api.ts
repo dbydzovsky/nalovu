@@ -4,11 +4,12 @@ import { setUser } from "../features/user";
 
 
 export interface SendAnswerProps {
-    gameId: number
+
 }
 
 export async function sendAnswer(props: SendAnswerProps) {
     const response = await axios.post('/api/game/answer', props)
+    const data = await response.data
 }
 
 export interface GetUserProps {
@@ -20,11 +21,13 @@ export const getUser = () => {
             const response = await axios.get('/api/user')
             const data = await response.data
             const user: User = {
+                id: data.id,
                 role: undefined,
                 name: data.name
             }
             dispatch(setUser(user))
         } catch(e) {
+            dispatch(setUser(undefined))
             console.log(e)
         }
     } 
@@ -86,9 +89,19 @@ export function logout(props: LogoutProps) {
         }
     }
 }
+export interface Group {
+    name: string
+}
+export interface GameAssignment {
+    role: UserRole
+    user: User
+    group: Group
+}
 export interface GameDto {
     id: number
     name: string
+    freeSlots: number
+    assignments: GameAssignment[]
     hasHunter: boolean
 }
 export interface ListGamesProps {
@@ -106,11 +119,18 @@ export async function listGames(props: ListGamesProps) {
 export interface JoinGameProps {
     gameId: number,
     role: UserRole,
+    assign: boolean
     onOk: (game: GameDto) => void
 }
 export async function joinGame(props: JoinGameProps) {
     try {
-        const response = await axios.post('/api/game/join', {
+        let url = ''
+        if (props.assign) {
+            url = '/api/game/join'
+        } else {
+            url = '/api/game/set'
+        }
+        const response = await axios.post(url, {
             gameId: props.gameId,
             role: props.role
         })

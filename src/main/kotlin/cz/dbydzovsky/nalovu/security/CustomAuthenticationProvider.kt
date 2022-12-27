@@ -19,10 +19,9 @@ class CustomAuthenticationProvider(
         val name: String = authentication.name
         val password: String = authentication.credentials.toString()
         val user = userService.getUser(name) ?: return null
-        val gameId = 0 // todo get GAME_ID from session cookie
         // and authenticate against the third-party system
         if (user.pass == password) {
-            val authorities = userService.getGrantedAuthorities(user, gameId)
+            val authorities = userService.getGrantedAuthorities(user)
             return UsernamePasswordAuthenticationToken(
                 name, password, authorities
             )

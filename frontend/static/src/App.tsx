@@ -13,12 +13,8 @@ import { useUser } from './components/user';
 
 
 function App() {
-  const answer = (e: any) => {
-    sendAnswer({gameId: 6})
-
-  }
   const user = useUser()
-  const loggedIn = user !== undefined
+  const loggedIn = user.loaded && user.logged
   const transition = useTransition()
   const classes = useStyles()
   return (

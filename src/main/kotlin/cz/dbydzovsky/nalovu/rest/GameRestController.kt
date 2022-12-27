@@ -7,12 +7,15 @@ import cz.dbydzovsky.nalovu.rest.dto.CreateGameDto
 import cz.dbydzovsky.nalovu.rest.dto.JoinGameDto
 import cz.dbydzovsky.nalovu.security.UserProvider
 import cz.dbydzovsky.nalovu.services.GameService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.apache.coyote.Response
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseCookie
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import javax.servlet.ServletRequest
+import javax.servlet.http.HttpServletRequest
 import javax.websocket.server.PathParam
+
 
 @RequestMapping
 @RestController
@@ -47,9 +50,38 @@ class GameRestController(
         return gameService.createGame(user, dto)
     }
 
-    @PostMapping(AppPaths.API_GAME_JOIN)
-    fun joinNewGame(@RequestBody dto: JoinGameDto): Game {
+    @PostMapping(AppPaths.API_GAME_SET)
+    fun setGame(@RequestBody dto: JoinGameDto, request: HttpServletRequest) :ResponseEntity<Game> {
         val user = userProvider.getActualUser()
-        return gameService.joinGame(user, dto)
+        val game = gameService.getOne(dto.gameId)
+        if (!game.assignments.any { it.user.id === user.id }) {
+            throw IllegalStateException("User is not part of this game")
+        }
+        val springCookie = ResponseCookie.from("gameid", game.id.toString())
+            .httpOnly(true)
+            .secure(false)
+            .path("/")
+            .maxAge(60 * 60 * 24)
+            .build()
+        return ResponseEntity
+            .ok()
+            .header(HttpHeaders.SET_COOKIE, springCookie.toString())
+            .body(game);
+    }
+
+    @PostMapping(AppPaths.API_GAME_JOIN)
+    fun joinNewGame(@RequestBody dto: JoinGameDto, request: HttpServletRequest): ResponseEntity<Game> {
+        val user = userProvider.getActualUser()
+        val game = gameService.joinGame(user, dto)
+        val springCookie = ResponseCookie.from("gameid", game.id.toString())
+            .httpOnly(true)
+            .secure(false)
+            .path("/")
+            .maxAge(60 * 60 * 24)
+            .build()
+        return ResponseEntity
+            .ok()
+            .header(HttpHeaders.SET_COOKIE, springCookie.toString())
+            .body(game);
     }
 }

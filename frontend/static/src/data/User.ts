@@ -5,6 +5,7 @@ export enum UserRole {
     Player = "Player",
 }
 export interface User {
+    id: number
     role: UserRole | undefined
     name: string
 }

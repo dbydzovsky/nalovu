@@ -1,10 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { User } from '../data/User'
 
+export interface MyUser extends User{
+  logged: boolean
+  loaded: boolean
+}
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    value: undefined as (User|undefined),
+    value: {logged: false, loaded: false} as MyUser,
   },
   reducers: {
     setUser: (state, action) => {
@@ -12,10 +17,10 @@ export const userSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value = action.payload
+      state.value = {...action.payload, logged: true, loaded: true} as MyUser
     },
     unsetUser: (state) => {
-      state.value = undefined
+      state.value = {logged: false, loaded: true} as MyUser
     }
   },
 })

@@ -15,5 +15,5 @@ export function Register () {
             }
         }))
     }
-    return <UserPassForm  text="Zaregistrovat" onSubmit={onSubmit} />
+    return <UserPassForm text="Zaregistrovat" onSubmit={onSubmit} />
 }

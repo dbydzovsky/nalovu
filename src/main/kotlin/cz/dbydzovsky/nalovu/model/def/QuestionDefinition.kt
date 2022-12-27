@@ -1,12 +1,13 @@
 package cz.dbydzovsky.nalovu.model.def
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity(name="question_definition")
 class QuestionDefinition (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?=null,
+    val id: Long?=null,
 
     @Column
     val type: QuestionType = QuestionType.Choose,
@@ -18,7 +19,8 @@ class QuestionDefinition (
     @JoinColumn(name="group_definition_id", nullable=true)
     val groupDefinition: GroupDefinition? = null,
 
-    @OneToMany(mappedBy="questionDefinition")
+    @JsonIgnore
+    @OneToMany(mappedBy="questionDefinition", targetEntity= AnswerDefinition::class)
     val answerDefinitions: List<AnswerDefinition> = listOf(),
 
     @ManyToOne

@@ -9,7 +9,7 @@ import { useUser } from './user'
 
 export function ActualUser () {
     const user =useUser()
-    if (user !== undefined) {
+    if (user.logged) {
         return <div>{user.name}</div>
     }
     return null

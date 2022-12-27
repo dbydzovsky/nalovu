@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import javax.annotation.PostConstruct
+import javax.websocket.server.PathParam
 
 @RestController
 class WebSocketRestController(
@@ -43,8 +44,9 @@ class WebSocketRestController(
         return textMessageDTO
     }
 
-    @SendTo("/topic/message")
-    fun broadcastMessage(@Payload textMessageDTO: GameMessage): GameMessage {
+    @SendTo("/topic/message/{id:[0-9]+}")
+    fun broadcastMessage(@PathParam("id") id: Long,
+                         @Payload textMessageDTO: GameMessage): GameMessage {
         return textMessageDTO
     }
 }

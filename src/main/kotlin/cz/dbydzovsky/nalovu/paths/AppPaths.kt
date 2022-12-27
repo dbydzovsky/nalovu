@@ -7,6 +7,7 @@ class AppPaths  {
         const val USER_REGISTRATION = "/registration"
         const val API_GAME = "/api/game"
         const val API_GAME_JOIN = "/api/game/join"
+        const val API_GAME_SET = "/api/game/set"
         const val API_USER = "/api/user"
         const val API_GAME_ANSWER = "/api/game/answer"
         const val API_GAME_ID = "$API_GAME/$ID_PATH_REGEX"
