@@ -14,9 +14,9 @@ import { useUser } from './components/user';
 
 function App() {
   const user = useUser()
-  const loggedIn = user.loaded && user.logged
   const transition = useTransition()
   const classes = useStyles()
+  const loggedIn = user.loaded && user.logged
   return (
     <div className={classes.root}>
         <Stack spacing={2} direction="column">

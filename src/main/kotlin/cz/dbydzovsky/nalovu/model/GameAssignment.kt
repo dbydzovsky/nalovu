@@ -23,6 +23,14 @@ class GameAssignment (
     @Column
     val role: UserRole = UserRole.Player,
 
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "money_fight_id", referencedColumnName = "id")
+    var moneyFight: MoneyFight? = null,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "money_fight_id", referencedColumnName = "id")
+    val hunterFight: HunterFight? = null,
+
     @ManyToOne
     @JoinColumn(name="group_id", nullable=true)
     val group: GroupDefinition? = null,

@@ -1,6 +1,8 @@
 package cz.dbydzovsky.nalovu.rest
 
+import AppPaths
 import cz.dbydzovsky.nalovu.data.UserDto
+import cz.dbydzovsky.nalovu.model.User
 import cz.dbydzovsky.nalovu.services.UserService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -20,14 +22,15 @@ class LoginRestController(
     val authenticationManager: AuthenticationManager
 ) {
 
-    @PostMapping("/signin")
+    @PostMapping(AppPaths.API_LOGIN)
     fun registerUserAccount(
         @RequestBody userDto: UserDto,
         request: HttpServletRequest,
-    ) {
+    ): User {
         val authToken = UsernamePasswordAuthenticationToken(userDto.username, userDto.password)
         authToken.details = WebAuthenticationDetails(request)
         val authentication: Authentication = authenticationManager.authenticate(authToken)
         SecurityContextHolder.getContext().authentication = authentication
+        return userService.getUser(userDto.username)!!
     }
 }

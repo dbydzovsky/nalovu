@@ -9,29 +9,30 @@ import Button from '@mui/material/Button';
 import { RedirectIfNotLogin } from './RedirectIfNotLoggedIn'
 import { Paths } from '..'
 import { useUser } from '../components/user'
-
+import Cookies from 'js-cookie';
 export function JoinGame() {
     const [games, setGames ] = React.useState([] as GameDto[])
     const user = useUser()
     React.useEffect(() => {
-        listGames({
+        store.dispatch(listGames({
             onDone: (games) => {
                 setGames(games)
             }
-        })
+        }))
     }, [])
     const transition = useMyTransition()
-    const openLobby = () => transition.openPage({url: Paths.lobby})
+    const openLobby = () => transition.openPage({url: Paths.gameRuntime})
     const createJoinGame = (id: number, role: UserRole, assign: boolean) => (e:any) => {
         e.preventDefault()
-        joinGame({
+        Cookies.set("actualgame", id + "")
+        store.dispatch(joinGame({
             gameId: id,
             role: role,
             assign: assign,
             onOk: (game: GameDto) => {
                 openLobby()
             }
-        })
+        }))
     }
     return <Stack spacing={2} direction="column">
         <RedirectIfNotLogin/>

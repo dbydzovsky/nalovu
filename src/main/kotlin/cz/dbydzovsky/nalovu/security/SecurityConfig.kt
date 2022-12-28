@@ -56,13 +56,17 @@ class SecurityConfig(
             .csrf().disable()
             .authenticationProvider(authenticationProvider())
             .authorizeRequests().antMatchers(
-            "/registration**", "/js/**", "/signin**",
-            "/css/**", "/img/**"
-        ).permitAll().anyRequest()
+                "${AppPaths.API_REGISTRATION}/**",
+                "${AppPaths.API_LOGIN}/**",
+                "${AppPaths.API_LOGOUT}/**",
+                "/js/**",
+                "/css/**",
+                "/img/**"
+          ).permitAll().anyRequest()
             .authenticated().and()
             .logout()
             .invalidateHttpSession(true).clearAuthentication(true)
-            .logoutRequestMatcher(AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")
+            .logoutRequestMatcher(AntPathRequestMatcher(AppPaths.API_LOGOUT)).logoutSuccessUrl("/")
             .permitAll()
         return http.build()
     }

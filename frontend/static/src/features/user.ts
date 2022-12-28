@@ -17,7 +17,7 @@ export const userSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value = {...action.payload, logged: true, loaded: true} as MyUser
+      state.value = {...action.payload, logged: action.payload !== undefined, loaded: true} as MyUser
     },
     unsetUser: (state) => {
       state.value = {logged: false, loaded: true} as MyUser

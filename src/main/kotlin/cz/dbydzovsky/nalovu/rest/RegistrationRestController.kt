@@ -2,6 +2,7 @@ package cz.dbydzovsky.nalovu.rest
 
 import AppPaths
 import cz.dbydzovsky.nalovu.data.UserDto
+import cz.dbydzovsky.nalovu.model.User
 import cz.dbydzovsky.nalovu.services.UserService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -22,16 +23,17 @@ class RegistrationRestController(
     val authenticationManager: AuthenticationManager
 ){
 
-    @PostMapping(AppPaths.USER_REGISTRATION)
+    @PostMapping(AppPaths.API_REGISTRATION)
     fun registerUserAccount(
         @RequestBody userDto: UserDto,
         request: HttpServletRequest,
-    ) {
+    ): User {
         val user = userDto.copy(password = passwordEncoder.encode(userDto.password))
         val registered = userService.registerNewUserAccount(user)
         val authToken = UsernamePasswordAuthenticationToken(registered.name, registered.pass)
         authToken.details = WebAuthenticationDetails(request)
         val authentication: Authentication = authenticationManager.authenticate(authToken)
         SecurityContextHolder.getContext().authentication = authentication
+        return userService.getUser(registered.name)!!
     }
 }

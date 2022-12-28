@@ -5,9 +5,12 @@ import cz.dbydzovsky.nalovu.model.*
 import cz.dbydzovsky.nalovu.model.def.GameDefinition
 import cz.dbydzovsky.nalovu.model.def.QuestionDefinition
 import cz.dbydzovsky.nalovu.repositories.*
+import cz.dbydzovsky.nalovu.rest.dto.CorrectAnswerDto
 import cz.dbydzovsky.nalovu.rest.dto.CreateGameDto
 import cz.dbydzovsky.nalovu.rest.dto.JoinGameDto
+import cz.dbydzovsky.nalovu.rest.dto.StartMoneyFightDto
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
@@ -16,6 +19,7 @@ class GameService(
     val gameDefinitionRepository: GameDefinitionRepository,
     val gameQuestionRepository: GameQuestionRepository,
     val gameAssignmentRepository: GameAssignmentRepository,
+    val moneyFightRepository: MoneyFightRepository,
     val questionDefinitionRepository: QuestionDefinitionRepository
 ) {
 
@@ -73,6 +77,7 @@ class GameService(
         return gameRepository.save(newGame)
     }
 
+    @Transactional
     fun joinGame(user: User, dto: JoinGameDto): Game {
         val game = getOne(dto.gameId)
         when(dto.role) {
@@ -92,5 +97,29 @@ class GameService(
         ))
         game.assignments.add(assignment)
         return gameRepository.save(game)
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    fun startMoneyFight(gameId: Long, dto: StartMoneyFightDto) {
+        val game = getOne(gameId)
+        val assignment = game.getPlayerAssignments()
+            .single { it.user.id === dto.userId }
+        assert(assignment.moneyFight == null)
+        assignment.moneyFight = moneyFightRepository.save(MoneyFight(
+            correctAnswers = 0,
+            amount = 0
+        ))
+        gameAssignmentRepository.save(assignment)
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    fun moneyFightAnswered(gameId: Long, dto: CorrectAnswerDto) {
+        val game = getOne(gameId)
+        val assignment = game.getPlayerAssignments()
+            .single { it.user.id === dto.userId }
+        val moneyFight = assignment.moneyFight!!
+        moneyFight.correctAnswers+= 1
+        moneyFight.amount+= 5000
+        moneyFightRepository.save(moneyFight)
     }
 }
